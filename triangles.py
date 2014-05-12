@@ -11,16 +11,15 @@ NumVertices = 6
 NumBuffers = 1
 VAOs = GLuint(0)
 NumVAOs = 2
-vPosition = 1
+vPosition = 0
 
 def ReadShader(filename):
-	with open(filename, rb) as file:
-		return file.raw_read()
+	with open(filename, 'rb') as file:
+		return file.read()
 	return ''
 
 def LoadShaders(shaders):
 	program = glCreateProgram()
-	shaderInfo = []
 
 	for shaderEntry in shaders:
 		shader = glCreateShader(shaderEntry[0])
@@ -28,6 +27,10 @@ def LoadShaders(shaders):
 
 		glShaderSource(shader, source)
 		glCompileShader(shader)
+
+		log = glGetShaderInfoLog(shader)
+		if log:
+			print log
 
 		glAttachShader(program, shader)
 
@@ -55,11 +58,11 @@ def init():
 	glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
 
 	shaders = [
-	#	(GL_VERTEX_SHADER, "triangles.vert"),
-	#	(GL_FRAGMENT_SHADER, "triangles.frag"),
+		(GL_VERTEX_SHADER, "triangles.vert"),
+		(GL_FRAGMENT_SHADER, "triangles.frag"),
 	]
 
-	program = 0 #LoadShaders(shaders)
+	program = LoadShaders(shaders)
 	glUseProgram(program)
 	glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, None)
 	
