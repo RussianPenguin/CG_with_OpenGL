@@ -22,8 +22,8 @@ def run():
 
     #Now create the shaders
     VERTEX_SHADER = shaders.compileShader("""
-    #version 330
-    layout(location = 0) in vec4 position;
+    #version 130
+    in vec4 position;
     void main()
     {
         gl_Position = position;
@@ -31,7 +31,7 @@ def run():
     """, GL_VERTEX_SHADER)
 
     FRAGMENT_SHADER = shaders.compileShader("""
-    #version 330
+    #version 130
     out vec4 outputColor;
     void main()
     {
