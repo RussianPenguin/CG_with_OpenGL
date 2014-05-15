@@ -8,10 +8,7 @@ import numpy as np
 import sys
 
 NumVertices = 6
-NumBuffers = 1
 VAOs = GLuint(0)
-NumVAOs = 2
-vPosition = 0
 
 def ReadShader(filename):
 	with open(filename, 'rb') as file:
@@ -30,6 +27,7 @@ def LoadShaders(shaders):
 
 		log = glGetShaderInfoLog(shader)
 		if log:
+			print "Error in shader: %s" % (shaderEntry[1])
 			print log
 
 		glAttachShader(program, shader)
@@ -39,7 +37,9 @@ def LoadShaders(shaders):
 	return program
 
 def init():
-	glGenVertexArrays(NumVAOs, VAOs)
+	global VAOs
+
+	glGenVertexArrays(1, VAOs)
 	glBindVertexArray(VAOs)
 
 	vertices = [
@@ -53,7 +53,7 @@ def init():
 
 	vertices = np.array(vertices, dtype="f")
 
-	buffers = glGenBuffers(NumBuffers)
+	buffers = glGenBuffers(1)
 	glBindBuffer(GL_ARRAY_BUFFER, buffers)
 	glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
 
@@ -64,9 +64,9 @@ def init():
 
 	program = LoadShaders(shaders)
 	glUseProgram(program)
-	glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, None)
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, None)
 	
-	glEnableVertexAttribArray(vPosition)
+	glEnableVertexAttribArray(0)
 
 def display():
 	glClear(GL_COLOR_BUFFER_BIT)
@@ -83,11 +83,6 @@ if __name__ == '__main__':
 	glutInitContextVersion(3, 3)
 	glutInitContextProfile(GLUT_CORE_PROFILE)
 	glutCreateWindow(sys.argv[0])
-
-
-	#if glewInit():
-	#	sys.strderr.write("Unable to inittialize GLEW ... exiting")
-	#	sys.exit(1)
 
 	init()
 	
