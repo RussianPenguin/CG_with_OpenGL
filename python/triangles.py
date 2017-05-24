@@ -40,7 +40,7 @@ def init():
     global VAOs
 
     glGenVertexArrays(1, VAOs)
-    glBindVertexArray(VAOs)
+    glBindVertexArray(VAOs.value)
 
     vertices = [
         [-0.90, -0.90],
