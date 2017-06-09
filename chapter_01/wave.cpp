@@ -17,7 +17,7 @@ const float HALF_SIZE_Z = SIZE_Z/2.f;
 const int TOTAL_VERTICES = (NUM_X+1)*(NUM_Z+1);
 const int TOTAL_TRIANGLES = NUM_X*NUM_Z*2;
 const int TOTAL_INDICES = TOTAL_TRIANGLES*3;
-const float SPEED = 1.f;
+const float SPEED = 2;
 
 const int WIDTH = 1280;
 const int HEIGHT = 960;
@@ -26,6 +26,9 @@ GLSLShader *shader;
 float dist = -7.f;
 float rX = 0.4;
 float rY = 0.2;
+
+int x = 0, y = 0, oldX = 0, oldY = 0;
+int state = 0;
 
 GLuint vaoID;
 GLuint vboVerticesID;
@@ -44,8 +47,8 @@ void init()
     shader->CreateAndLinkProgram();
     shader->Use();
     shader->AddAttribute("vVertex");
-    shader->AddAttribute("MVP");
-    shader->AddAttribute("time");
+    shader->AddUniform("MVP");
+    shader->AddUniform("time");
     shader->UnUse();
 
     int count = 0;
@@ -71,7 +74,7 @@ void init()
                 *id++ = i1; *id++ = i2; *id++ = i3;
             }else{
                 *id++ = i0; *id++ = i2; *id++ = i3;
-                *id++ = i2; *id++ = i3; *id++ = i1;
+                *id++ = i0; *id++ = i3; *id++ = i1;
             }
         }
     }
@@ -91,12 +94,18 @@ void init()
     //setup projection matrix
     P = glm::mat4(1);;
     glClearColor(0, 0, 0, 0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     cout << "Initialization successfull" << endl;
 }
 
 void shutdown()
 {
     delete shader;
+}
+
+void OnIdle()
+{
+    glutPostRedisplay();
 }
 
 void OnShutdown()
@@ -110,13 +119,38 @@ void OnShutdown()
 
 void OnResize(int nw, int nh)
 {
+    glViewport(0, 0, (GLsizei) nw, (GLsizei) nh);
     //setup perspective projection
     P = glm::perspective(45.0f, (GLfloat)nw/nh, 1.f, 1000.f);
 }
 
+void OnMouseDown(int button, int s, int x, int y)
+{
+    if(s == GLUT_DOWN){
+        oldX = x;
+        oldY = y;
+    }
+    if(button == GLUT_RIGHT_BUTTON)
+        state = 0;
+    else
+        state = 1;
+}
+
+void OnMouseMove(int x, int y){
+    if(state == 0)
+        dist *= (1 + (y- oldY)/60.f);
+    else{
+        rY += (x - oldX)/100.f;
+        rX += (y - oldY)/100.f;
+    }
+    oldX = x;
+    oldY = y;
+    glutPostRedisplay();
+}
+
 void OnRender()
 {
-    //glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     float time = glutGet(GLUT_ELAPSED_TIME)/1000.f*SPEED;
     glm::mat4 T = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, dist));
     glm::mat4 Rx = glm::rotate(T, rX, glm::vec3(1.f, 0.f, 0.f));
@@ -162,6 +196,9 @@ int main(int argc, char* argv[])
     glutCloseFunc(OnShutdown);
     glutDisplayFunc(OnRender);
     glutReshapeFunc(OnResize);
+    glutIdleFunc(OnIdle);
+    glutMotionFunc(OnMouseMove);
+    glutMouseFunc(OnMouseDown);
     glutMainLoop();
     shutdown();
     return 0;
