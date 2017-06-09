@@ -7,10 +7,14 @@ using namespace std;
 const int WIDTH = 1280;
 const int HEIGHT = 960;
 
-void OnInit()
+void init()
 {
     glClearColor(1, 0, 0, 0);
     cout << "Initialization successfull" << endl;
+}
+
+void shutdown()
+{
 }
 
 void OnShutdown()
@@ -56,10 +60,11 @@ int main(int argc, char* argv[])
     cout << "\tVersion: " << glGetString(GL_VERSION) << endl;
     cout << "\tGLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << endl;
 
-    OnInit();
+    init();
     glutCloseFunc(OnShutdown);
     glutDisplayFunc(OnRender);
     glutReshapeFunc(OnResize);
     glutMainLoop();
+    shutdown();
     return 0;
 }

@@ -104,7 +104,8 @@ GLuint GLSLShader::operator()(const string& uniform){
 void GLSLShader::LoadFromFile(GLenum whichShader, const string& filename){
 	ifstream fp;
 	fp.open(filename.c_str(), ios_base::in);
-	if(fp) {		 
+	if(fp) {
+        cout << "Load shader from " << filename << endl;
 		string line, buffer;
 		while(getline(fp, line)) {
 			buffer.append(line);

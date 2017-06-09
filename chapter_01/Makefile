@@ -6,3 +6,6 @@ simple:
 
 simple_triangle:
 	g++ -O0 -g -lGLEW -lGL -lglut -I../include simple_triangle.cpp ../lib/GLSLShader.cpp -o ../bin/simple_triangle
+
+wave:
+	g++ -O0 -g -lGLEW -lGL -lglut -I../include wave.cpp ../lib/GLSLShader.cpp -o ../bin/wave

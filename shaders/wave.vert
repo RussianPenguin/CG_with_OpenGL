@@ -3,7 +3,7 @@ layout(location = 0) in vec3 vVertex;
 uniform mat4 MVP;
 uniform float time;
 const float amplitude = 0.125;
-const float frequency = 4;
+const float frequency = 4.0;
 const float PI = 3.14159;
 void main()
 {
