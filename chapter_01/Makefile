@@ -12,3 +12,6 @@ wave:
 
 simple_divide:
 	g++ -O0 -g -lGLEW -lGL -lglut -I../include simple_divide.cpp ../lib/GLSLShader.cpp -o ../bin/simple_divide
+
+instanced_divide:
+	g++ -O0 -g -lGLEW -lGL -lglut -I../include instanced_divide.cpp ../lib/GLSLShader.cpp -o ../bin/instanced_divide
