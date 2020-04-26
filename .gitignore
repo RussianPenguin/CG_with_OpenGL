@@ -1,4 +1,2 @@
 *.swp
 *~
-!bin/.gitkeep
-bin
